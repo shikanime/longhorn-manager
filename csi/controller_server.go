@@ -460,6 +460,13 @@ func (cs *ControllerServer) ControllerPublishVolume(ctx context.Context, req *cs
 		}
 	}
 
+	if requireExclusiveAccess(volume, volumeCapability) {
+		volume, err = cs.updateVolumeAccessMode(volume, longhorn.AccessModeReadWriteOncePod)
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	// TODO: JM Restore should be handled by the volume attach call, consider returning `codes.Aborted`
 	// TODO: JM should readiness be handled by the caller?
 	//  Most of the readiness conditions are covered by the attach, except auto attachment which requires changes to the design
