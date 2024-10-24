@@ -465,6 +465,20 @@ func requiresSharedAccess(vol *longhornclient.Volume, cap *csi.VolumeCapability)
 		mode == csi.VolumeCapability_AccessMode_MULTI_NODE_MULTI_WRITER
 }
 
+func isExclusiveAccess(vol *longhornclient.Volume, cap *csi.VolumeCapability) bool {
+	isExclusive := false
+	if vol != nil {
+		isExclusive = vol.AccessMode == string(longhorn.AccessModeReadWriteOncePod)
+	}
+
+	mode := csi.VolumeCapability_AccessMode_UNKNOWN
+	if cap != nil {
+		mode = cap.AccessMode.Mode
+	}
+
+	return isExclusive || mode == csi.VolumeCapability_AccessMode_SINGLE_NODE_SINGLE_WRITER
+}
+
 func getStageBlockVolumePath(stagingTargetPath, volumeID string) string {
 	return filepath.Join(stagingTargetPath, volumeID)
 }
