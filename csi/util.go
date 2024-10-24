@@ -107,6 +107,16 @@ func getVolumeOptions(volumeID string, volOptions map[string]string) (*longhornc
 		vol.StaleReplicaTimeout = defaultStaleReplicaTimeout
 	}
 
+	if exclusive, ok := volOptions["exclusive"]; ok {
+		isExclusive, err := strconv.ParseBool(exclusive)
+		if err != nil {
+			return nil, errors.Wrap(err, "invalid parameter exclusive")
+		}
+		if isExclusive && vol.AccessMode == string(longhorn.AccessModeReadWriteOnce) {
+			vol.AccessMode = string(longhorn.AccessModeReadWriteOncePod)
+		}
+	}
+
 	if share, ok := volOptions["share"]; ok {
 		isShared, err := strconv.ParseBool(share)
 		if err != nil {
@@ -115,9 +125,11 @@ func getVolumeOptions(volumeID string, volOptions map[string]string) (*longhornc
 
 		if isShared {
 			vol.AccessMode = string(longhorn.AccessModeReadWriteMany)
-		} else {
-			vol.AccessMode = string(longhorn.AccessModeReadWriteOnce)
 		}
+	}
+
+	if vol.AccessMode == "" {
+		vol.AccessMode = string(longhorn.AccessModeReadWriteOnce)
 	}
 
 	if migratable, ok := volOptions["migratable"]; ok {
