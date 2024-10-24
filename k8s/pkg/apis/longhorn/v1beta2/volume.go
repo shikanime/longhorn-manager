@@ -53,7 +53,7 @@ const (
 	DataLocalityStrictLocal = DataLocality("strict-local")
 )
 
-// +kubebuilder:validation:Enum=rwo;rwx
+// +kubebuilder:validation:Enum=rwo;rwop,rwx
 type AccessMode string
 
 const (
