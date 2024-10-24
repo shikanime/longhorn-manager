@@ -278,6 +278,8 @@ type VolumeSpec struct {
 	// +optional
 	Migratable bool `json:"migratable"`
 	// +optional
+	Exclusive bool `json:"exclusive"`
+	// +optional
 	Encrypted bool `json:"encrypted"`
 	// +optional
 	NumberOfReplicas int `json:"numberOfReplicas"`

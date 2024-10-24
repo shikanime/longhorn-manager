@@ -116,6 +116,10 @@ func (v *volumeValidator) Create(request *admission.Request, newObj runtime.Obje
 		return werror.NewInvalidError("migratable volumes are only supported in ReadWriteMany (rwx) access mode", "")
 	}
 
+	if volume.Spec.Exclusive && volume.Spec.AccessMode != longhorn.AccessModeReadWriteOncePod {
+		return werror.NewInvalidError("exclusive volumes are only supported in ReadWriteOncePod (rwop) access mode", "")
+	}
+
 	// Check engine version before disable revision counter
 	if volume.Spec.RevisionCounterDisabled {
 		if ok, err := v.canDisableRevisionCounter(volume.Spec.Image, volume.Spec.DataEngine); !ok {
