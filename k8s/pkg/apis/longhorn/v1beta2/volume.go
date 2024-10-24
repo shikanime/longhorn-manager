@@ -57,8 +57,9 @@ const (
 type AccessMode string
 
 const (
-	AccessModeReadWriteOnce = AccessMode("rwo")
-	AccessModeReadWriteMany = AccessMode("rwx")
+	AccessModeReadWriteOnce    = AccessMode("rwo")
+	AccessModeReadWriteOncePod = AccessMode("rwop")
+	AccessModeReadWriteMany    = AccessMode("rwx")
 )
 
 // +kubebuilder:validation:Enum=ignored;disabled;least-effort;best-effort
