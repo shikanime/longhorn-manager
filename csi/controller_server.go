@@ -220,6 +220,10 @@ func (cs *ControllerServer) CreateVolume(ctx context.Context, req *csi.CreateVol
 			volumeParameters["share"] = "true"
 			break
 		}
+		if isExclusiveAccess(nil, cap) {
+			volumeParameters["exclusive"] = "true"
+			break
+		}
 	}
 
 	vol, err := getVolumeOptions(volumeID, volumeParameters)
