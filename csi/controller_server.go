@@ -256,7 +256,11 @@ func (cs *ControllerServer) CreateVolume(ctx context.Context, req *csi.CreateVol
 	// we need to mark the volume as a shared volume
 	for _, cap := range volumeCaps {
 		if requiresSharedAccess(nil, cap) {
-			volumeParameters["share"] = "true"
+			volumeParameters["share"] = strconv.FormatBool(true)
+			break
+		}
+		if requireExclusiveAccess(nil, cap) {
+			volumeParameters["exclusive"] = strconv.FormatBool(true)
 			break
 		}
 		if requireExclusiveAccess(nil, cap) {
